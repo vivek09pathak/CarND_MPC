@@ -4,7 +4,8 @@
 
 **MPC Controller Project**
 
-(Note - Hi , The visualization for the simulator on my machine is available at - )
+(Note - Hi , The visualization for the simulator on my machine is available at 40 Kmph -https://www.youtube.com/watch?v=v3BWEooDPSo&feature=youtu.be
+The visualization for the simulator on my machine is available at 70 Kmph -https://www.youtube.com/watch?v=ZvqyxZ0iwYs&feature=youtu.be)
 
 The broad goals / steps of this project are the following:
 
