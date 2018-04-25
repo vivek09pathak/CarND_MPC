@@ -51,9 +51,9 @@ I have taken mostly eqautions as discussed in the lessons and Q&A where I was st
 #### 2. Student discusses the reasoning behind the chosen N (timestep length) and dt (elapsed duration between timesteps) values. Additionally the student details the previous values tried.
 
 
-I started with the value of N=25 and dt=0.1 as discussed in the classroom but since my machine was slow it was taking very much time and was diverting at very angles the I tried with N=20 and dt=0.05 to keep the value of T below 1s as discussed in the classroom but still the processing was slow and was not generating good result 
+I started with the value of N=25 and dt=0.1 as discussed in the classroom but since my machine was slow it was taking very much time and was diverting at very angles then I tried with N=20 and dt=0.05 to keep the value of T below 1s as discussed in the classroom as result was good but still the green lines were diverting a lot and then I tried with reference velocity 120 but it gave me too many green lines so I decided with stable model and came with **N=10 and dt=0.1** where it gave me good output as my final values.
 
-Then finally I came with N=10 and dt=0.1 where it gave me good output.As my final values
+But I have made video on both values of N=10 and N=20 please do see both the implementations.
 
 #### 3. A polynomial is fitted to waypoints. If the student preprocesses waypoints, the vehicle state, and/or actuators prior to the MPC procedure it is described.
 
@@ -77,4 +77,4 @@ Thus accounting for the 100 ms latency.
 
 #### 1. Briefly discuss what could you do to make the implementation more robust?
 
-I tried to implement my model with different parameter to make it work at 100mph but due to slow processors.But i will keep tune the values for cte and orientatiom angle where i can tune my model to upto 100mph.
+I tried to implement my model with different parameter to make it work at 100mph but due to slow processors i came upto touching speed of 70 kmp.But i will keep tune the values for cte and orientatiom angle(as I took 3300 for both) where i can tune my model to upto 100mph.
