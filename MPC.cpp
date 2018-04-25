@@ -21,7 +21,7 @@ double dt = 0.1;
 // This is the length from front to CoG that has a similar radius.
 const double Lf = 2.67;
 
-double refrence_vel = 60;
+double refrence_vel = 90;
 size_t x_start = 0;
 size_t y_start = x_start + N;
 size_t psi_start = y_start + N;
@@ -46,8 +46,8 @@ class FG_eval {
     fg[0]= 0;
 
     for (int t = 0; t < N; t++) {
-      fg[0] += 3000*CppAD::pow(vars[cte_start + t], 2);
-      fg[0] += 3000*CppAD::pow(vars[epsi_start + t], 2);
+      fg[0] += 3300*CppAD::pow(vars[cte_start + t], 2);
+      fg[0] += 3300*CppAD::pow(vars[epsi_start + t], 2);
       fg[0] += CppAD::pow(vars[v_start + t] - refrence_vel, 2);
     }
 
@@ -59,7 +59,7 @@ class FG_eval {
 
     // Minimize the value gap between sequential actuations.
     for (int t = 0; t < N - 2; t++) {
-      fg[0] += 300*CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
+      fg[0] += 200*CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
       fg[0] += 10*CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
     }
 
@@ -91,10 +91,7 @@ class FG_eval {
 
       AD<double> delta0=vars[delta_start + i -1];
       AD<double> a0 =vars[a_start + i -1];
-      /*if (i > 1) {   // use previous actuations (to account for latency)
-        a0 = vars[a_start + i - 2];
-        delta0 = vars[delta_start + i - 2];
-      }*/
+
       //third order polynomial
       AD<double> f0=coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0, 2) + coeffs[3] * CppAD::pow(x0, 3);
       AD<double> psides0=CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0 + 3 * coeffs[3] * CppAD::pow(x0, 2));
@@ -123,7 +120,7 @@ MPC::~MPC() {}
 
 vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   bool ok = true;
-  size_t i;
+  //size_t i;
   typedef CPPAD_TESTVECTOR(double) Dvector;
 
   // TODO: Set the number of model variables (includes both states and inputs).
@@ -174,15 +171,15 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   // degrees (values in radians).
   // NOTE: Feel free to change this to something else.
   for (int i = delta_start; i < a_start; i++) {
-    vars_lowerbound[i] = -0.22332;
-    vars_upperbound[i] =0.22332;
+    vars_lowerbound[i] = -0.22332*Lf;
+    vars_upperbound[i] =0.22332*Lf;
   }
 
   // Acceleration/decceleration upper and lower limits.
   // NOTE: Feel free to change this to something else.
   for (int i = a_start; i < n_vars; i++) {
-    vars_lowerbound[i] = -0.3;
-    vars_upperbound[i] = 0.3;
+    vars_lowerbound[i] = -1.0;
+    vars_upperbound[i] = 1.0;
   }
 
   // Lower and upper limits for constraints
