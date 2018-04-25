@@ -56,6 +56,8 @@ I started with the value of N=25 and dt=0.1 as discussed in the classroom but si
 
 But I have made video on both values of N=10 and N=20 please do see both the implementations.
 
+**NOTE- I changed the value of delta roughly from -12 degree to 12 degree.
+
 #### 3. A polynomial is fitted to waypoints. If the student preprocesses waypoints, the vehicle state, and/or actuators prior to the MPC procedure it is described.
 
 As discussed in Q&A project waypoints are pre-processed as shifting the car reference by 90 degree as Homogenous Transformation described in implemetation of particle filter and rotating about the origin.Which easily fit the polynomial easily.
