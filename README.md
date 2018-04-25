@@ -30,8 +30,8 @@ You're reading it!
 
 #### 1. Student describes their model in detail. This includes the state, actuators and update equations.
 
-Model Predictive model reframes the task of following a trajectory as an optimization problem as using optimal trajectory.As refrence trajectory is defined where predicted trajectory with minimum cost.
-As State equations defined as is for t time stamp where we will predict the t+1 timestamp.A cost function defined in the MPC aims to minimize the value of errors attached with trajectory like state and actuators as to penalize the magnitude to input as well as change rate like to remove jerks or sudden change to stop that we will apply cost so smooth changes are achieved or car doesn't stop.After finding the optimal trajectory will we take the current point and predict our next state and dump the trajectory and repeat the process.
+Model Predictive model reframes the task of following a trajectory as an optimization problem as using optimal trajectory.As refrence trajectory where predicted trajectory is used with minimum cost.
+As State equations defined is for t+1 time-stamp using t time-stamp state.A cost function defined in the MPC aims to minimize the value of errors attached with trajectory like state and actuators as to penalize the magnitude of input as well as change rate like to remove jerks or sudden change by using cost error it makes the smooth track changes or car doesn't stop.After finding the optimal trajectory will we take the current point and predict our next state and dump the trajectory and repeat the process.
 
 As actuator inputs are controls such as steering angle, acceleration, brake predicting the trajectory and selecting that trajectory which has the least cost as we have applied cost functions on that also.
 
