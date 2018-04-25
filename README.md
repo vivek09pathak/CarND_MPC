@@ -4,7 +4,7 @@
 
 **MPC Controller Project**
 
-(Note - Hi , The visualization for the simulator on my machine is available at - https://youtu.be/0fdTAO2y_w4)
+(Note - Hi , The visualization for the simulator on my machine is available at - )
 
 The broad goals / steps of this project are the following:
 
@@ -30,43 +30,51 @@ You're reading it!
 
 #### 1. Student describes their model in detail. This includes the state, actuators and update equations.
 
-The MPC controller converts the problem of predicting the correct trajectory for the robot into an optimization problem as David summarises in the classroom. A 'Cost function' is defined in an MPC Controller and the aim is to minimize the value of 'Cost' associated with following a particular trajectory. Various actuator inputs are simulated, where actuators are nothing but controls such as steering angle, acceleration, brake(deacceleration) etc , predicting the trajectory and selecting that trajectory which has the least cost. Once this 'optimal' trajectory is determined , only the first few actuator commands are executed and the remaining trajectory is not used. The idea being, instead of using the predicted trajectory , use the new current state and repeat the prediction process for this new state. Thus, MPC constantly re-evaluates the inputs to find the optimal trajectory.
+Model Predictive model reframes the task of following a trajectory as an optimization problem as using optimal trajectory.As refrence trajectory is defined where predicted trajectory with minimum cost.
+As State equations defined as is for t time stamp where we will predict the t+1 timestamp.A cost function defined in the MPC aims to minimize the value of errors attached with trajectory like state and actuators as to penalize the magnitude to input as well as change rate like to remove jerks or sudden change to stop that we will apply cost so smooth changes are achieved or car doesn't stop.After finding the optimal trajectory will we take the current point and predict our next state and dump the trajectory and repeat the process.
 
-The equations used to implement this continuous re-evaluation use the vehicle's x and y position, orientation, velocity, cross-track-error and orientation error, and are as follows:
+As actuator inputs are controls such as steering angle, acceleration, brake predicting the trajectory and selecting that trajectory which has the least cost as we have applied cost functions on that also.
 
-![alt text](https://github.com/arpitsri3/carND_P10/blob/master/Equations.png)
+As update equations used to implement this continuouly predict the vehicle's x and y position, orientation, velocity, cross-track-error and orientation error, and are as follows:
 
-An additional point I'd like to mention is that the equations for orientation and orientation error had to be modified with a negative sign. Because as discussed in the classroom, in the simulator , a positive value implies a right turn and a negative value implies a left turn.
+        x_[t+1] = x[t] + v[t] * cos(psi[t]) * dt
+        y_[t+1] = y[t] + v[t] * sin(psi[t]) * dt
+        psi_[t+1] = psi[t] + v[t] / Lf * delta[t] * dt
+        v_[t+1] = v[t] + a[t] * dt
+        cte[t+1] = f(x[t]) - y[t] + v[t] * sin(epsi[t]) * dt
+        epsi[t+1] = psi[t] - psides[t] + v[t] * delta[t] / Lf * dt
 
-I have mostly followed the instructions given in the project Q&A video linked in the project module, whenever I got stuck about how to implememt a particular equation and most of the code is adapted and taken from the MPC - 'Mind the Line' quiz and the project Q&A session.
+But there was some change in the equations where orientation eqaution is modified as discussed in the classroom because in simultaor positive implies right turn and negative implies left turn.
+
+I have taken mostly eqautions as discussed in the lessons and Q&A where I was stucked for it.
 
 #### 2. Student discusses the reasoning behind the chosen N (timestep length) and dt (elapsed duration between timesteps) values. Additionally the student details the previous values tried.
 
 
-The value chosen for N and dt ultimately used are 10 and 0.1. These were the values I started with after going through the project Q&A video , however I tried two other combinations-
-1. N-25, dt-0.05 - I picked this value from 'Mind the Line' quiz in the classroom but it made the processing slow (as is expected) (also I don't have very good hardware), so ultimately I have not used it.
-2. N-20, dt-0.1 
+I started with the value of N=25 and dt=0.1 as discussed in the classroom but since my machine was slow it was taking very much time and was diverting at very angles the I tried with N=20 and dt=0.05 to keep the value of T below 1s as discussed in the classroom but still the processing was slow and was not generating good result 
 
-I think , and also as explained in the Q&A , 10 and 0.1 just work because the timestep is not so large that it slows down the MPC neither is it so small that it doesn't give a good prediction. I guess it is just a very optimal combination for the problem. Technically speaking the MPC considers a 1 second duration for correcting trajectory.
+Then finally I came with N=10 and dt=0.1 where it gave me good output.As my final values
 
 #### 3. A polynomial is fitted to waypoints. If the student preprocesses waypoints, the vehicle state, and/or actuators prior to the MPC procedure it is described.
 
-As discussed in the project Q&A the waypoints are pre-processed by shifting car reference model 90 degrees and rotating about the origin. This effectively makes it easy for fitting the polynomial.
+As discussed in Q&A project waypoints are pre-processed as shifting the car reference by 90 degree as Homogenous Transformation described in implemetation of particle filter and rotating about the origin.Which easily fit the polynomial easily.
 
 
 #### 4. The student implements Model Predictive Control that handles a 100 millisecond latency. Student provides details on how they deal with latency.
 
-Again as per the hint given in the project Q&A the same actuations are modified with the condition:
+As per described by my mentor I used the latency from the fist previous timestamp as follows:-
 
-if (t > 1) {
-        a0 = vars[a_start + t - 2];
-        delta0 = vars[delta_start + t - 2];
-      }
+                double latency =0.125;
+                px = px + v * cos(psi) * latency;
+                py = py + v * sin(psi) * latency;
+                psi = psi - v* steer_value/Lf * latency;
+                v += v + throttle_value * latency;
 
-Thus, after the first timestep, the actuator values used, are the ones for the previous to previous timestep, thus accounting for the 100 ms latency.
+
+Thus accounting for the 100 ms latency.
 
 ### Discussion
 
 #### 1. Briefly discuss what could you do to make the implementation more robust?
 
-I tried a number of times to make the vehicle simulation at a reference speed of 100. But my implementaion always failed at the point after the bridge. I would continue to tune the weights for CTE and orientation angle error (which are currently at 3333) to see if i can make it work at 100.
+I tried to implement my model with different parameter to make it work at 100mph but due to slow processors.But i will keep tune the values for cte and orientatiom angle where i can tune my model to upto 100mph.
